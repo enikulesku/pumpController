@@ -4,9 +4,10 @@
 #define PUMP_PIN   D13
 
 // 4 hours
-#define MIN_DELAY  14400000
+#define MIN_DELAY     14400000UL
+#define INITIAL_DELAY 0UL
 
-long lastOff;
+unsigned long lastOff, currentMillis;
 
 boolean lastState = false;
 
@@ -29,7 +30,7 @@ void setup() {
   pinMode(RELAY1_PIN, OUTPUT);
   pinMode(RELAY2_PIN, OUTPUT);
   change(false);
-  lastOff = 0;
+  lastOff = INITIAL_DELAY;
 }
 
 void loop() {
@@ -41,7 +42,8 @@ void loop() {
     }
   } else {
     if (!lastState) {
-      if ((lastOff == 0) || (abs(millis() - lastOff) >= MIN_DELAY)) {
+      currentMillis = millis();
+      if ((lastOff == INITIAL_DELAY) || (currentMillis - lastOff >= MIN_DELAY)) {
         change(true);
       }
     }
